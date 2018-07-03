@@ -55,13 +55,13 @@ function getUsers() {
     xhrCohorts.open('GET', `../data/cohorts/lim-2018-03-pre-core-pw/progress.json`);
     xhrCohorts.onload = function () {
       const progress = JSON.parse(event.currentTarget.responseText);
-      const users = [];
+      /* const users = [];
       usersData.map(user => {
         if (generacion.value === user.signupCohort) {
           users.push(user);
         }
-      })
-      addUser(users, progress)
+      }) */
+      addUser(usersData, progress)
     }
     xhrCohorts.onerror = handleError;
     xhrCohorts.send();

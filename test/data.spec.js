@@ -92,7 +92,30 @@ describe('data', () => {
     });
 
     it('debería retornar arreglo de usuarios ordenado por porcentaje general ASC', () => {
-      assert.deepEqual(sortUsers(processed, 'percent', 'asc')[0].stats.percent, 0);
+      assert.deepEqual(sortUsers(processed, 'percent', 'asc')[0],
+      {
+      name: "Leyla Yumira Tolentino Goñe",
+      stats: {
+        exercises: {
+         completed: 0,
+         percent: 0,
+         total: 2,
+       },
+        percent: 0,
+        quizzes: {
+          completed: 0,
+          percent: 0,
+          scoreAvg: 0,
+          scoreSum: 0,
+          total: 3,
+        },
+        reads: {
+         completed: 0,
+         percent: 0,
+         total: 11,
+       }
+      }
+    });
       assert.deepEqual(sortUsers(processed, 'percent', 'asc')[734].stats.percent, 100);
     });
     it('debería retornar arreglo de usuarios ordenado por porcentaje general DESC', () => {
@@ -134,7 +157,7 @@ describe('data', () => {
     });
     it('debería retornar arreglo de usuarios ordenado por lecturas (reads) completadas DESC', () => {
       
-      assert.deepEqual(sortUsers(processed, 'reads', 'desc')[0].stats.reads.completed, 11);
+      assert.deepEqual(sortUsers(processed, 'reads', 'desc')[0].name,'katherine patricia trujillo minaya');
       assert.deepEqual(sortUsers(processed, 'reads', 'desc')[734].stats.reads.completed, 0);
     });
 
@@ -155,14 +178,25 @@ describe('data', () => {
 
   describe('processCohortData({ cohortData, orderBy, orderDirection, filterBy })', () => {
     const cohort = fixtures.cohorts.find(item => item.id === 'lim-2018-03-pre-core-pw');
-    const courses = Object.keys(cohort.coursesIndex);
     const { users, progress } = fixtures;
-
+    let options = {
+      cohort: cohort,
+        cohortData:{
+          users: users,
+          progress:progress
+        },
+        orderBy:'name',
+        orderDirection: 'asc',
+        search:''
+    }
     it('debería retornar arreglo de usuarios con propiedad stats y aplicar sort y filter', () => {
-      const processed = processCohortData({cohort: cohort,cohortData:{users: users,progress:progress},orderBy:'name',orderDirection: 'asc',filterBy:'alejandra'});
-      
-      assert.deepEqual(processed[0].name, 'Sabrina Alejandra  Campos Morón');
-      
+      const processed = processCohortData(options);
+      assert.deepEqual(processed[0].name, 'adriana vizcarra paitán');
+      options.search = 'alejandra';
+      assert.deepEqual(processCohortData(options)[0].name,'Alejandra');
+      options.orderBy = 'reads';
+      options.orderDirection = 'desc';
+      assert.deepEqual(processCohortData(options)[0].name,'Alejandra')
     });
 
   });
