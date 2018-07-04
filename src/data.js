@@ -195,16 +195,16 @@ window.computeUsersStats = (users, progress, courses) => {
   return usersWithStats;
 }
 window.sortUsers = (users, orderBy, orderDirection) => {
-  
+  const orderByName = users.sort(function (a, b) {
+    var x = a.name.toLowerCase();
+    var y = b.name.toLowerCase();
+    if (x < y) { return -1; }
+    if (x > y) { return 1; }
+    return 0;
+  });
   if (orderBy === 'name' & orderDirection === 'asc') {
     // console.log(orderByName)
-    const orderByName = users.sort(function (a, b) {
-      var x = a.name.toLowerCase();
-      var y = b.name.toLowerCase();
-      if (x < y) { return -1; }
-      if (x > y) { return 1; }
-      return 0;
-    });
+    
     return orderByName;
   } else if (orderBy === 'name' & orderDirection === 'desc') {
     const orderByName = users.sort(function (a, b) {
@@ -216,10 +216,10 @@ window.sortUsers = (users, orderBy, orderDirection) => {
     });
     return orderByName;
   } else if (orderBy === 'percent' & orderDirection === 'asc') {
-    const order = users.sort(function (a, b) { return a.stats.percent - b.stats.percent });
+    const order = orderByName.sort(function (a, b) { return a.stats.percent - b.stats.percent });
     return order;
   } else if (orderBy === 'percent' & orderDirection === 'desc') {
-    const order = users.sort(function (a, b) { return b.stats.percent - a.stats.percent });
+    const order = orderByName.sort(function (a, b) { return b.stats.percent - a.stats.percent });
     return order;
   } else if (orderBy === 'exercises' & orderDirection === 'asc') {
     const order = users.sort(function (a, b) { return a.stats.exercises.completed - b.stats.exercises.completed });
