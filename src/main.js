@@ -2,8 +2,8 @@ const sedeSelect = document.getElementById('sede');
 const generationSelect = document.getElementById('generacion');
 const selectProgram = document.getElementById('programa');
 const stringSearch = document.getElementById('search');
-const selectOrderDirection = document.getElementById('orderDirection');
-const selectOrderBy = document.getElementById('orderBy');
+const selectOrderDirection = document.getElementById('order-direction');
+const selectOrderBy = document.getElementById('order-by');
 const ordenar = document.getElementById('ordenar');
 const infoData = document.getElementById('info');
 

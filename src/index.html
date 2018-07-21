@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Data Dashboard</title>
-  <link href="https://fonts.googleapis.com/css?family=Bitter|Open+Sans" rel="stylesheet"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" href="https://scontent-scl1-1.xx.fbcdn.net/v/t1.15752-9/35142656_1705344299514252_5863557290291888128_n.png?_nc_cat=0&oh=2951acd9c2c492451ab4132eb974b4a7&oe=5BB35433"
   />
@@ -13,7 +12,7 @@
 <body>
   <header class="encabezado">
       <div id="logo">
-          <img src="img/logo.png" alt="Logo de Laboratoria">
+          <img src="img/logo.png" alt="Logo de Laboratoria"/>
         </div>
   </header>
   <aside class="contenido-lateral">
@@ -26,7 +25,7 @@
         <option value="scl">Santiago de Chile</option>
         <option value="spl">Sao Paulo</option>
       </select>
-      <br>
+      <br/>
       <select id="programa"  class="form-control form-control-sm">
         <option value="">--Selecciona un programa--</option>
         <option value="pre">Selección</option>
@@ -34,15 +33,15 @@
         <option value="ec">Educación Continua</option>
         <option value="corp-training">Corporate Training</option>
       </select>
-      <br>
+      <br/>
       <select id="generacion" class="form-control form-control-sm">
         <option value="1">--Selecciona una generacion--</option>
       </select>
-      <br>
+      <br/>
       <label>Buscar</label>
-      <input type="text" id="search" class="form-control form-control-sm">
-      <br>
-      <select id="orderBy" class="form-control form-control-sm">
+      <input type="text" id="search" class="form-control form-control-sm"/>
+      <br/>
+      <select id="order-by" class="form-control form-control-sm">
         <option value="name">Nombre</option>
         <option value="percent">Progreso</option>
         <option value="exercises">Ejercicios</option>
@@ -50,17 +49,18 @@
         <option value="quizzesAvg">PromedioScore</option>
         <option value="reads">Lecturas</option>
       </select>
-      <br>
-      <select id="orderDirection" class="form-control form-control-sm">
+      <br/>
+      <select id="order-direction" class="form-control form-control-sm">
         <option value="asc">Ascendente</option>
         <option value="desc">Descendente</option>
       </select>
-      <br>
+      <br/>
       <button id="ordenar" class="btn btn-default">Ordenar</button>
   </aside>
-  <h3 id="info"></h3>
-  <section id="showing" class="contenido row">
-  </section>
+  <main>
+    <h3 id="info"></h3>
+    <section id="showing" class="contenido row"></section>
+  </main>
   <footer class="pie-pagina">Autor: Bella Aguirre y Geraldine Saco</footer>
   <script src="data.js"></script>
   <script src="main.js"></script>
