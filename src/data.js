@@ -121,12 +121,8 @@ window.sortUsers = (users, orderBy, orderDirection) => {
   }
 }
 
-window.filterUsers = (users, search) => {
-  const userFilter = users.filter(user => {
-    return user.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
-  });
-  return userFilter;
-}
+window.filterUsers = (users, search) => users.filter(user => user.name.toLowerCase().indexOf(search.toLowerCase()) > -1);
+
 window.processCohortData = (options) => {
   const courses = Object.keys(options.cohort.coursesIndex)
   let estudiantes = computeUsersStats(options.cohortData.users, options.cohortData.progress, courses);

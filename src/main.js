@@ -143,25 +143,17 @@ stringSearch.addEventListener('keyup', () => {
 getCohorts();
 getUsers();
 //filtrando cohorts por sede
-const filterItems = query => {
-  return options.cohorts.filter(sede => {
-    return sede.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
-  });
-}
+const filterItems = query => options.cohorts.filter(sede => sede.id.toLowerCase().indexOf(query.toLowerCase()) > -1);
+
 //filtrando por programa 
 sedeSelect.addEventListener('change', function (e) {
   e.preventDefault();
   let index = sedeSelect.value;
   const dataFilter = filterItems(index);
-  let filterSede = query => {
-    return dataFilter.filter(programa => {
-      return programa.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
-    });
-    
-  }
+  const filterSede = query => dataFilter.filter(programa => programa.id.toLowerCase().indexOf(query.toLowerCase()) > -1);
+  
   //filtrando por cohort por programa
   selectProgram.addEventListener('change', function (e) {
-      //generationSelect.innerHTML = ''
     document.innerHTML = generationSelect.value = '0'; // fijar opción de selección
     document.innerHTML = generationSelect.length = 1; // elimina la opción anterior seleccionada
     let valueProgram = selectProgram.value;
