@@ -50,7 +50,6 @@ const getCohorts = () => {
   xhrCohorts.onload = () => {
     const dataCohorts = JSON.parse(event.target.responseText);
     options.cohorts = dataCohorts;
-   
   };
   xhrCohorts.onerror = handleError;
   xhrCohorts.send();

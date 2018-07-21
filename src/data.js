@@ -26,7 +26,7 @@ window.computeUsersStats = (users, progress, courses) => {
                       if (exercise.hasOwnProperty('completed')) {
                         exercisesCompleted += exercise.completed;
                       }
-                    })
+                    });
                   }
               }
               if (part.type === 'read') {
@@ -40,7 +40,7 @@ window.computeUsersStats = (users, progress, courses) => {
                   scoreSumQuizzes += part.score;
                 }
               }
-            })
+            });
           });     
       }
     });
