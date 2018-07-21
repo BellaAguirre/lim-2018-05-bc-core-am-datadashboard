@@ -84,7 +84,6 @@ const dataTable = (datos) => {
     const divPrincipal = document.createElement('div');
     //creando atributos a los div
     newDivStudent.setAttribute('class','div-student');
-    //newDivStudent.setAttribute('class','div-content')
     newDivName.setAttribute('class','div-name');
     newDivProgress.setAttribute('class','div-progress');
     divPrincipal.setAttribute('class','col-md-4');

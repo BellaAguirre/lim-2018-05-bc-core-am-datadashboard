@@ -1,188 +1,74 @@
 window.computeUsersStats = (users, progress, courses) => {
   const usersWithStats = users.map(user => {
-    const percentProgress = () => {
-      const percent = [];
-      courses.map(course => {
-        if (progress[user.id] && Object.keys(progress[user.id]).length > 0 && !Array.isArray(progress[user.id])) {
-            percent.push(progress[user.id][course].percent);
-        }
-      });
-      if (percent[0] === undefined) {
-        return percent[0] = 0;
-      } else {
-        return percent[0];
-      }
-    }
-    const exercisesTotal = () => {
-      const total = [];
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].hasOwnProperty('exercises')) {
-                total.push(Object.values(progress[user.id][course].units[leccion].parts[lectura].exercises).length);
-              }
-            })
-          })
-        }
-      });
-      if (total[0] === undefined) {
-        return total[0] = 0;
-      } else {
-        return total[0];
-      }
-    }
-    const exercisesCompleted = () => {
-      const completed = [];
-      const initial = 0;
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].hasOwnProperty('exercises')) {
-                Object.keys(progress[user.id][course].units[leccion].parts[lectura].exercises).map(exercise => {
-                  if (progress[user.id][course].units[leccion].parts[lectura].exercises[exercise].hasOwnProperty('completed')) {
-                    completed.push(progress[user.id][course].units[leccion].parts[lectura].exercises[exercise].completed);
+    let percent = 0;
+    let exercisesTotal = 0;
+    let exercisesCompleted = 0;
+    let totalReads = 0;
+    let completedReads = 0;
+    let totalQuizzes = 0;
+    let completedQuizzes = 0;
+    let scoreSumQuizzes = 0;
+    let scoreAvgQuizzes = 0;
+    let percentExercises = 0;
+    let percentReads = 0;
+    let percentQuizzes = 0;
+    
+    courses.map(course => {
+      if (progress[user.id].hasOwnProperty(course)) {
+          percent += Math.round(progress[user.id][course].percent / courses.length);
+          Object.keys(progress[user.id][course].units).map(unit => {
+            Object.values(progress[user.id][course].units[unit].parts).map(part => {
+              if (part.type === 'practice') {
+                  if (part.hasOwnProperty('exercises')) {
+                    const exercises = Object.values(part.exercises);
+                    exercisesTotal = exercises.length;
+                    exercises.map(exercise => {
+                      if (exercise.hasOwnProperty('completed')) {
+                        exercisesCompleted += exercise.completed;
+                      }
+                    })
                   }
-                });
               }
-            });
-          });
-        }
-      });
-        return completed.reduce((a,b) => a+b,initial)
-    }
-    const percentExercises = () =>{
-      let percent = 0;
-      if(exercisesTotal() === 0) {
-        return percent = 0;
-      } else {
-        return percent = (exercisesCompleted() * 100 ) / exercisesTotal();
-      }
-    }
-    const totalReads = () => {
-      const total = [];
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].type === 'read') {
-                total.push(progress[user.id][course].units[leccion].parts[lectura].type)
+              if (part.type === 'read') {
+                totalReads++;
+                completedReads += part.completed;
               }
-            })
-          })
-        }
-      });
-      return total.length;
-    }
-    const completedReads = () => {
-      const completed = [];
-      const initial = 0;
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].type === 'read') {
-                completed.push(progress[user.id][course].units[leccion].parts[lectura].completed)
-              }
-            })
-          })
-        }
-      });
-      return completed.reduce((a, b) => a + b, initial);
-    }
-    const percentReads = () => {
-      let percent = 0;
-      if (totalReads() === 0) {
-        return percent = 0;
-      } else {
-        return percent = Math.round((completedReads() * 100) / totalReads());
-      }
-    }
-    const totalQuizzes = () => {
-      const total = [];
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].type === 'quiz') {
-                total.push(progress[user.id][course].units[leccion].parts[lectura].type)
-              }
-            })
-          })
-        }
-      });
-      return total.length;
-    }
-    const completedQuizzes = () => {
-      const completed = [];
-      const initial = 0;
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].type === 'quiz') {
-                completed.push(progress[user.id][course].units[leccion].parts[lectura].completed)
-              }
-            })
-          })
-        }
-      });
-      return completed.reduce((a, b) => a + b, initial);
-    }
-    const percentQuizzes = () => {
-      let percent = 0;
-      if (totalQuizzes() === 0) {
-        return percent = 0;
-      } else {
-        return percent = Math.round((completedQuizzes() * 100) / totalQuizzes());
-      }
-    }
-    const scoreSumQuizzes = () => {
-      const scoreSum = [];
-      const initial = 0;
-      courses.map(course => {
-        if (progress[user.id] && progress[user.id].hasOwnProperty(course)) {
-          Object.keys(progress[user.id][course].units).map(leccion => {
-            Object.keys(progress[user.id][course].units[leccion].parts).map(lectura => {
-              if (progress[user.id][course].units[leccion].parts[lectura].type === 'quiz') {
-                if (progress[user.id][course].units[leccion].parts[lectura].score !== undefined) {
-                  scoreSum.push(progress[user.id][course].units[leccion].parts[lectura].score)
+              if (part.type === 'quiz') {
+                totalQuizzes++;
+                completedQuizzes += part.completed;
+                if (part.score !== undefined) {
+                  scoreSumQuizzes += part.score;
                 }
               }
             })
-          })
-        }
-      });
-      return scoreSum.reduce((a, b) => a + b, initial);
-    }
-    const scoreAvgQuizzes = () => {
-      if (completedQuizzes() === 0) {
-        return 0;
-      } else {
-        return Math.round(scoreSumQuizzes() / completedQuizzes());
+          });     
       }
-    }
+    });
+    exercisesTotal !== 0 ? percentExercises = Math.round((exercisesCompleted * 100 ) / exercisesTotal) : 0;
+    totalReads !== 0 ? percentReads = Math.round((completedReads * 100) / totalReads) : 0;
+    totalQuizzes !== 0 ? percentQuizzes = Math.round((completedQuizzes * 100) / totalQuizzes) : 0;
+    completedQuizzes !== 0 ? scoreAvgQuizzes = Math.round(scoreSumQuizzes / completedQuizzes) : 0;
+      
     const stats = {
     name: user.name,  
     stats: {
-      percent: percentProgress(),
+      percent: percent,
       exercises: {
-        total: exercisesTotal(),
-        completed: exercisesCompleted(),
-        percent: percentExercises(),
+        total: exercisesTotal,
+        completed: exercisesCompleted,
+        percent: percentExercises,
       },
       reads: {
-        total: totalReads(),
-        completed: completedReads(),
-        percent: percentReads(),
+        total: totalReads,
+        completed: completedReads,
+        percent: percentReads,
       },
       quizzes: {
-        total: totalQuizzes(),
-        completed: completedQuizzes(),
-        percent: percentQuizzes(),
-        scoreSum: scoreSumQuizzes(),
-        scoreAvg: scoreAvgQuizzes(),
+        total: totalQuizzes,
+        completed: completedQuizzes,
+        percent: percentQuizzes,
+        scoreSum: scoreSumQuizzes,
+        scoreAvg: scoreAvgQuizzes,
       }
     }
   }
@@ -199,12 +85,11 @@ window.sortUsers = (users, orderBy, orderDirection) => {
     return 0;
   });
   if (orderBy === 'name' & orderDirection === 'asc') {
-    // console.log(orderByName)
     return orderByName;
   } else if (orderBy === 'name' & orderDirection === 'desc') {
     return orderByName.reverse();
   } else if (orderBy === 'percent' & orderDirection === 'asc') {
-    const order = orderByName.sort(function (a, b) { return a.stats.percent - b.stats.percent });
+    const order = users.sort(function (a, b) { return a.stats.percent - b.stats.percent });
     return order;
   } else if (orderBy === 'percent' & orderDirection === 'desc') {
     const order = users.sort(function (a, b) { return b.stats.percent - a.stats.percent });
