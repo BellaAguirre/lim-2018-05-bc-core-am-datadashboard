@@ -1,12 +1,11 @@
 const sedeSelect = document.getElementById('sede');
-const generationSelect = document.getElementById('generacion');
-const selectProgram = document.getElementById('programa');
+const generationSelect = document.getElementById('generation');
+const selectProgram = document.getElementById('program');
 const stringSearch = document.getElementById('search');
 const selectOrderDirection = document.getElementById('order-direction');
 const selectOrderBy = document.getElementById('order-by');
-const ordenar = document.getElementById('ordenar');
-
-var sectionContentStudents = document.getElementById("showing");
+const btnOrder = document.getElementById('order');
+const sectionContentStudents = document.getElementById("showing");
 
 let options = {
   cohort: '',
@@ -14,52 +13,28 @@ let options = {
     users: [],
     progress: {}
   },
-  orderBy: '',
-  orderDirection: '',
+  orderBy: 'name',
+  orderDirection: 'asc',
   search: '',
 
 }
-function pasarDatos(users, progress, cohortSelect) {
-  options.cohort = cohortSelect[0];
-  options.cohortData.users = users;
-  options.cohortData.progress = progress;
-  options.orderBy = selectOrderBy.value;
-  options.orderDirection = selectOrderDirection.value;
-  options.search = stringSearch.value;
-  const data = processCohortData(options);
-  dataTable(data)
 
-  ordenar.addEventListener('click', function () {
-    options.orderBy = selectOrderBy.value;
-    options.orderDirection = selectOrderDirection.value;
-    const userOrder = processCohortData(options);
-    sectionContentStudents.innerHTML = '';
-    dataTable(userOrder);
-
-  })
-  stringSearch.addEventListener('keyup', function () {
-    options.search = stringSearch.value;
-    const userfilter = processCohortData(options);
-    sectionContentStudents.innerHTML = '';
-    dataTable(userfilter);
-  })
+const handleError = () => {
+  throw 'se ha presentado un error';
 }
-function getUsers() {
+//obteniendo users y progress
+const getUsers = () => {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', `../data/cohorts/lim-2018-03-pre-core-pw/users.json`);
   xhr.onload = function () {
-    const usersData = JSON.parse(event.currentTarget.responseText);
+    let usersData = JSON.parse(event.currentTarget.responseText);
     const xhrCohorts = new XMLHttpRequest();
     xhrCohorts.open('GET', `../data/cohorts/lim-2018-03-pre-core-pw/progress.json`);
     xhrCohorts.onload = function () {
       const progress = JSON.parse(event.currentTarget.responseText);
-      const users = [];
-      usersData.map(user => {
-        if (user.role === 'student') {
-          users.push(user);
-        }
-      })
-      addUser(users, progress)
+      const users = usersData.filter(user => user.role === 'student');
+      options.cohortData.users = users;
+      options.cohortData.progress = progress;
     }
     xhrCohorts.onerror = handleError;
     xhrCohorts.send();
@@ -67,74 +42,41 @@ function getUsers() {
   xhr.onerror = handleError;
   xhr.send();
 }
-function handleError() {
-  console.log('se ha presentado un error');
-}
+
 //obteniendo data cohorts
-function getCohorts(callback) {
+const getCohorts = () => {
   const xhrCohorts = new XMLHttpRequest();
   xhrCohorts.open('GET', `../data/cohorts.json`);
-  xhrCohorts.onload = callback;
+  xhrCohorts.onload = () => {
+    const dataCohorts = JSON.parse(event.target.responseText);
+    options.cohorts = dataCohorts;
+   
+  };
   xhrCohorts.onerror = handleError;
   xhrCohorts.send();
 }
 
-function filterSelect() {
-  getCohorts((e) => {
-    const dataCohorts = JSON.parse(e.target.responseText);
-
-    const filterItems = query => {
-      return dataCohorts.filter(sede => {
-        return sede.id.toLowerCase().indexOf(query.toLowerCase()) > -1
-      });
-    }
-
-    sedeSelect.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      let index = e.target.id;
-      const dataFilter = filterItems(index);
-
-      let s = query => {
-        return dataFilter.filter(programa => {
-          return programa.id.toLowerCase().indexOf(query.toLowerCase()) > -1
-        });
-      }
-
-      program.addEventListener('change', function (e) {
-        e.preventDefault();
-
-        let valueProgram = e.target.value;
-        let endFilter = s(valueProgram);
-
-        for (i in endFilter) {
-          let option = document.createElement('option');
-          option.setAttribute('value', endFilter[i].id)
-          option.innerText += endFilter[i].id;
-          generacion.appendChild(option);
-        }
-      });
-    });
-  });
-}
-
-function addUser(users, progress) {
-  getCohorts(() => {
-    const dataCohorts = JSON.parse(event.target.responseText);
-    const cohortSelect = [];
-    for (cohort of dataCohorts) {
-      if (cohort.id === generationSelect.value) {
-        cohortSelect.push(cohort);
-      }
-    }
-    pasarDatos(users, progress, cohortSelect);
-  })
-
-}
-
-function dataTable(datos) {
+const dataTable = (datos) => {
   // datos.length = 10;
-  for (let i = 0; i < datos.length; i++) {
+  // let contentDiv = '';
+  for (let i in datos) {
+  // contentDiv +=
+  // `<div class="col-md-4">
+  //     <div class="div-student">
+  //       <div class="div-name">
+  //         <p>${datos[i].name}</p>
+  //       </div>
+  //       <div class="div-progress">
+  //         <ul>
+  //           <li>${'Progreso General: ' + datos[i].stats.percent + '%'}</li>
+  //           <li>${'% Lecturas: ' + datos[i].stats.reads.percent + '%'}</li>
+  //           <li>${'% Ejercicios: ' + datos[i].stats.exercises.percent + '%'}</li>
+  //           <li>${'% Quizzes: ' + datos[i].stats.quizzes.percent + '%'}</li>
+  //         </ul>
+  //       </div>
+  //     </div>
+  //   </div>`;
+  //   sectionContentStudents.innerHTML = contentDiv;
     //creando div contenedores
     const newDivStudent = document.createElement('div');
     const newDivProgress = document.createElement('div');
@@ -179,54 +121,67 @@ function dataTable(datos) {
     newDivStudent.appendChild(newDivName);
     newDivStudent.appendChild(newDivProgress);
 
-    divPrincipal.appendChild(newDivStudent);
+    divPrincipal.appendChild(newDivStudent); 
     sectionContentStudents.appendChild(divPrincipal);
   }
 }
-function filterSelect() {
-  getCohorts((e) => {
-    const dataCohorts = JSON.parse(e.target.responseText);
+//ordenando estudiantes
+btnOrder.addEventListener('click', () => {
+  options.orderBy = selectOrderBy.value;
+  options.orderDirection = selectOrderDirection.value;
+  const userOrder = processCohortData(options);
+  sectionContentStudents.innerHTML = '';
+  dataTable(userOrder);
 
-    const filterItems = query => {
-      return dataCohorts.filter(sede => {
-        return sede.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
-      });
-    }
-
-
-    sedeSelect.addEventListener('change', function (e) {
-      e.preventDefault();
-      let index = sedeSelect.value;
-      const dataFilter = filterItems(index);
-      let filterSede = query => {
-        return dataFilter.filter(programa => {
-          return programa.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
-        });
-      }
-
-      selectProgram.addEventListener('change', function (e) {
-        // generacion.innerHTML = ''
-        document.innerHTML = generationSelect.value = '0'; // fijar opción de selección
-        document.innerHTML = generationSelect.length = 1; // elimina la opción anterior seleccionada
-        let valueProgram = selectProgram.value;
-        let endFilter = filterSede(valueProgram);
-        for (i in endFilter) {
-          let option = document.createElement('option');
-          option.setAttribute('value', endFilter[i].id)
-          option.innerText = endFilter[i].id;
-          generationSelect.appendChild(option);
-        }
-      });
-      generationSelect.addEventListener('change', function (e) {
-        if (generationSelect.value === 'lim-2018-03-pre-core-pw') {
-          getUsers();
-        } else {
-          sectionContentStudents.innerHTML = '';
-        }
-      });
-    });
+});
+//buscando estudiante
+stringSearch.addEventListener('keyup', () => {
+  options.search = stringSearch.value;
+  const userfilter = processCohortData(options);
+  sectionContentStudents.innerHTML = '';
+  dataTable(userfilter);
+});
+getCohorts();
+getUsers();
+//filtrando cohorts por sede
+const filterItems = query => {
+  return options.cohorts.filter(sede => {
+    return sede.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
   });
 }
-
-filterSelect()
-getCohorts()
+//filtrando por programa 
+sedeSelect.addEventListener('change', function (e) {
+  e.preventDefault();
+  let index = sedeSelect.value;
+  const dataFilter = filterItems(index);
+  let filterSede = query => {
+    return dataFilter.filter(programa => {
+      return programa.id.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    });
+    
+  }
+  //filtrando por cohort por programa
+  selectProgram.addEventListener('change', function (e) {
+      //generationSelect.innerHTML = ''
+    document.innerHTML = generationSelect.value = '0'; // fijar opción de selección
+    document.innerHTML = generationSelect.length = 1; // elimina la opción anterior seleccionada
+    let valueProgram = selectProgram.value;
+    let endFilter = filterSede(valueProgram);
+    for (const i in endFilter) {
+      let option = document.createElement('option');
+      option.setAttribute('value', endFilter[i].id)
+      option.innerText = endFilter[i].id;
+      generationSelect.appendChild(option);
+    }
+  });
+  //mostrando data de cohort seleccionado
+  generationSelect.addEventListener('change', function (e) {
+      for (const cohort of options.cohorts) {
+        if (cohort.id === generationSelect.value) {
+          options.cohort = cohort;
+        }
+      }
+      const data = processCohortData(options);
+      dataTable(data)
+  });
+});
