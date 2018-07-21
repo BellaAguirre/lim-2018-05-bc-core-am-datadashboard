@@ -5,7 +5,6 @@ const stringSearch = document.getElementById('search');
 const selectOrderDirection = document.getElementById('order-direction');
 const selectOrderBy = document.getElementById('order-by');
 const ordenar = document.getElementById('ordenar');
-const infoData = document.getElementById('info');
 
 var sectionContentStudents = document.getElementById("showing");
 
@@ -220,7 +219,6 @@ function filterSelect() {
       });
       generationSelect.addEventListener('change', function (e) {
         if (generationSelect.value === 'lim-2018-03-pre-core-pw') {
-          infoData.innerHTML = '   Cohort: ' + generationSelect.value;
           getUsers();
         } else {
           sectionContentStudents.innerHTML = '';
