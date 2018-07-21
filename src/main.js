@@ -24,8 +24,8 @@ function pasarDatos(users, progress, cohortSelect) {
   options.cohort = cohortSelect[0];
   options.cohortData.users = users;
   options.cohortData.progress = progress;
-  options.orderBy = orderBy.value;
-  options.orderDirection = orderDirection.value;
+  options.orderBy = selectOrderBy.value;
+  options.orderDirection = selectOrderDirection.value;
   options.search = stringSearch.value;
   const data = processCohortData(options);
   dataTable(data)
